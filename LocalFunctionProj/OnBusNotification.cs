@@ -14,7 +14,7 @@ namespace LocalFunctionProj
 
         public OnBusNotification(IMessageReceiver receiver) => _receiver = receiver;
 
-        //[Function("OnBusNotification")]
+        [Function("OnBusNotification")]
         public Task OnTriggerAsync([ServiceBusTrigger(QueueName, "my-subscription")] byte[] rawMessage,
             FunctionContext context)
         {
