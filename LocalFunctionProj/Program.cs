@@ -57,6 +57,7 @@ namespace LocalFunctionProj
                 });
 
         }
+        // 'this' declares as an extension method, can be invoked via ContainerBuilder directly
         public static void AddMassTransitForFunctions(this ContainerBuilder self)
         {
             self.RegisterType<AsyncBusHandle>().As<IAsyncBusHandle>().SingleInstance();
@@ -78,6 +79,7 @@ namespace LocalFunctionProj
                 .AsImplementedInterfaces()
                 .AsSelf()
                 .InstancePerLifetimeScope();
+            // call extension method
             builder.AddMassTransitForFunctions();
         }
     }
