@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace LocalFunctionProj
 {
+    // 通过反射装配 message
     public static class MessageFactory
     {
         public static Message CreateMessage(byte[] body, FunctionContext context)
@@ -41,7 +42,7 @@ namespace LocalFunctionProj
         {
             var rawValue = self.GetRawValue(accessor);
             if (typeof(TProperty) == typeof(DateTime)) rawValue = rawValue?.ToString()?.Trim('"');
-            return (TProperty) Convert.ChangeType(rawValue, typeof(TProperty));
+            return (TProperty)Convert.ChangeType(rawValue, typeof(TProperty));
         }
 
         static object GetRawValue<TOwner, TProperty>(this FunctionContext self,
@@ -75,7 +76,7 @@ namespace LocalFunctionProj
             Expression<Func<TOwner, TProperty>> accessor,
             FunctionContext context)
         {
-            var json = (string) context.GetRawValue(accessor);
+            var json = (string)context.GetRawValue(accessor);
             var value = JsonConvert.DeserializeObject(json, typeof(TProperty));
             self.SetProperty(accessor, value);
         }
@@ -97,7 +98,7 @@ namespace LocalFunctionProj
             if (setter == default)
                 throw new ArgumentException("The property does not have any setter", nameof(accessor));
 
-            setter.Invoke(self, new[] {value});
+            setter.Invoke(self, new[] { value });
         }
     }
 }

@@ -4,6 +4,7 @@ using MassTransit;
 
 namespace TestClient
 {
+    // 定义 autofac 的 module
     public class TestClientModule : AModuleWithConfiguration
     {
         protected override void Load(ContainerBuilder builder)
@@ -13,9 +14,10 @@ namespace TestClient
             builder.RegisterType<SendCommandCommand>().AsSelf();
             builder.RegisterType<SendNotificationCommand>().AsSelf();
             builder.RegisterType<SendRequestCommand>().AsSelf();
-
+            // 向 autofac 注册 MassTransit
             builder.AddMassTransit(massTransit =>
             {
+                // 使用ASB 作为 transport provider
                 massTransit.AddBus(ctx => Bus.Factory.CreateUsingAzureServiceBus(cfg =>
                 {
                     var connectionString = Environment.GetEnvironmentVariable("ServiceBusConnectionString");

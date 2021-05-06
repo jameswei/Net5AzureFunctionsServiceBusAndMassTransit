@@ -17,7 +17,7 @@ namespace LocalFunctionProj
         public Task Consume(ConsumeContext<SomeNotification> context)
         {
             var notification = context.Message;
-            var logMsg = $"Receveid SomeNotification with {notification.Info}";
+            var logMsg = $"Received SomeNotification with {notification.Info}";
             _logger.LogDebug(logMsg);
             Console.WriteLine(logMsg);
             return Task.CompletedTask;

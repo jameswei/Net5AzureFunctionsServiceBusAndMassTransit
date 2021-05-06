@@ -7,6 +7,7 @@ using IHost = Microsoft.Extensions.Hosting.IHost;
 
 namespace TestClient
 {
+    // 实现成 hosted service
     public class Application : IHostedService
     {
         readonly IBusControl _busControl;
@@ -20,6 +21,7 @@ namespace TestClient
             _host = host;
         }
 
+        // 实现 service start
         public async Task StartAsync(CancellationToken ct)
         {
             await _busControl.StartAsync(ct);
@@ -65,6 +67,10 @@ namespace TestClient
             }
         }
 
-        public Task StopAsync(CancellationToken ct) => _busControl.StopAsync(ct);
+        // 实现 service stop
+        public Task StopAsync(CancellationToken ct)
+        {
+            return this._busControl.StopAsync(ct);
+        }
     }
 }

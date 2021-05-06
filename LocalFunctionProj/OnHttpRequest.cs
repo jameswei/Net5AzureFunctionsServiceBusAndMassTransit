@@ -11,6 +11,7 @@ namespace LocalFunctionProj
 
         public OnHttpRequest(IResponder responder) => _responder = responder;
 
+        // HttpTrigger 加在 HttpRequestData 参数上，由Worker来组装参数
         [Function("OnHttpRequest")]
         public Task<HttpResponseData> OnTriggerAsync([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")]
             HttpRequestData request,

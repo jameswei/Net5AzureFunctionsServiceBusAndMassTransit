@@ -2,13 +2,8 @@ using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using MassTransit;
-using MassTransit.Azure.ServiceBus.Core;
-using MassTransit.Azure.ServiceBus.Core.Configuration;
-using MassTransit.Azure.ServiceBus.Core.Configurators;
 using MassTransit.WebJobs.ServiceBusIntegration;
 using Microsoft.ApplicationInsights.DependencyCollector;
-using Microsoft.Azure.ServiceBus.Primitives;
-using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Azure.WebJobs.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,15 +26,18 @@ namespace LocalFunctionProj
             host.Run();
         }
 
+        // 在 ServiceCollection 上注册 service
         static void ConfigureServices(IServiceCollection services)
         {
+            // telemetry module
             services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) =>
             {
                 module.IncludeDiagnosticSourceActivities.Add("MassTransit");
             })
+                // 配置 MassTransit
                 .AddMassTransit(x =>
                 {
-
+                    // 使用 ASB 作为 transport provider
                     x.UsingAzureServiceBus((context, cfg) =>
                     {
                         var config = context.GetRequiredService<IConfiguration>();
@@ -63,15 +61,18 @@ namespace LocalFunctionProj
         {
             self.RegisterType<AsyncBusHandle>().As<IAsyncBusHandle>().SingleInstance();
             self.RegisterType<MessageReceiver>().As<IMessageReceiver>().SingleInstance();
+            // 向 autofac 注册 MassTransit
             self.AddMassTransit(massTransit =>
             {
                 massTransit.AddConsumers(typeof(Program).Assembly);
             });
         }
 
+        // 利用Autofac装配service provider
         static void WireUp(ContainerBuilder builder)
         {
             builder.RegisterType<Responder>().AsImplementedInterfaces();
+            // 注册IConsumer实现类
             builder.RegisterAssemblyTypes(typeof(Program).Assembly)
                 .Where(t => t.IsAssignableTo<IConsumer>() && !t.IsAbstract)
                 .AsImplementedInterfaces()

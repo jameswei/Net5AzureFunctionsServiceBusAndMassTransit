@@ -4,6 +4,11 @@ namespace TestClient
 {
     class Program
     {
-        static Task Main(string[] args) => ConsoleApplication.BootstrapAsync<TestClientModule, Application>("TestClient", args);
+        public static void Main(string[] args)
+        {
+            var task = ConsoleApplication.BootstrapAsync<TestClientModule, Application>("TestClient", args);
+            task.Start();
+        }
+        // static Task Main(string[] args) => ConsoleApplication.BootstrapAsync<TestClientModule, Application>("TestClient", args);
     }
 }

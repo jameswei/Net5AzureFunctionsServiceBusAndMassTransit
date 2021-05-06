@@ -19,6 +19,7 @@ namespace LocalFunctionProj
         {
             var logger = context.GetLogger("OnQueueMessage");
             logger.LogDebug("Received queue msg");
+            // 通过 byte[] 和 context 来反射组装 message
             var message = MessageFactory.CreateMessage(body, context);
 
             return _receiver.Handle(QueueName, message, CancellationToken.None);
